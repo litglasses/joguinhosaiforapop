@@ -26,8 +26,8 @@
         #game-container {
             position: relative;
             width: 100vw;
-            height: 70vh;
-            background-color: #2e2242; /* Quarto estilo Undertale */
+            height: 50vh; /* Ajustado para dar espaço ao analógico */
+            background-color: #2e2242; 
             border-bottom: 4px solid #fff;
             overflow: hidden;
         }
@@ -44,7 +44,7 @@
             width: 140px;
             height: 100px;
             background-color: #5c3e2b;
-            top: 40%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             border-radius: 50%;
@@ -56,90 +56,122 @@
             position: absolute;
             transform: translate(-50%, -50%);
             z-index: 2;
-            transition: left 0.1s linear, top 0.1s linear;
         }
-        /* Personagem: Cabelo Vermelho e Olhos Verdes */
+
+        /* --- MENINA DE CABELO VERMELHO E OLHO VERDE --- */
         #player {
-            width: 32px;
-            height: 45px;
-            background-color: #e63946; /* Cabelo Vermelho */
-            border-radius: 6px;
-            border: 3px solid #2a9d8f;
-            box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+            width: 35px;
+            height: 55px;
         }
         #player::before {
             content: '';
             position: absolute;
-            top: 8px; left: 4px; width: 6px; height: 6px;
-            background: #00ff66; border-radius: 50%; /* Olho verde */
+            top: 5px; left: 2px;
+            width: 31px; height: 45px;
+            background-color: #d62828; 
+            border-radius: 8px 8px 4px 4px;
+            z-index: 1;
+            box-shadow: inset -3px 0 0 #b31b1b;
         }
-        #player::after {
-            content: '';
+        .character-face {
             position: absolute;
-            top: 8px; right: 4px; width: 6px; height: 6px;
-            background: #00ff66; border-radius: 50%; /* Olho verde */
+            top: 6px; left: 6px;
+            width: 23px; height: 20px;
+            background-color: #ffd1b3; 
+            border-radius: 4px;
+            z-index: 3;
         }
-        #cat {
-            font-size: 28px;
-            line-height: 1;
+        .character-face::before {
+            content: ''; position: absolute; top: 6px; left: 4px; width: 4px; height: 5px;
+            background-color: #00ff66; border-bottom: 2px solid #004d1a;
         }
+        .character-face::after {
+            content: ''; position: absolute; top: 6px; right: 4px; width: 4px; height: 5px;
+            background-color: #00ff66; border-bottom: 2px solid #004d1a;
+        }
+        .character-hair-front {
+            position: absolute; top: 3px; left: 4px; width: 27px; height: 8px;
+            background-color: #d62828; border-radius: 4px 4px 0 0; z-index: 4;
+        }
+        .character-body {
+            position: absolute; top: 25px; left: 6px; width: 23px; height: 22px;
+            background-color: #00b4d8; border-radius: 4px 4px 2px 2px; z-index: 2;
+            box-shadow: inset 0 -4px 0 #0077b6;
+        }
+        .character-body::after {
+            content: ''; position: absolute; bottom: -5px; left: 2px; width: 19px; height: 6px;
+            background-color: #1a1a1a; border-radius: 2px; box-shadow: 4px 0 0 #1a1a1a, 11px 0 0 #1a1a1a;
+        }
+
+        #cat { font-size: 32px; line-height: 1; }
         #toy {
-            font-size: 32px;
-            line-height: 1;
-            filter: drop-shadow(0 0 8px #00d2ff);
-            animation: bounce 1s infinite alternate;
+            font-size: 36px; line-height: 1;
+            filter: drop-shadow(0 0 10px #00d2ff);
+            animation: bounce 0.8s infinite alternate;
         }
         @keyframes bounce {
             from { transform: translate(-50%, -50%) scale(1); }
-            to { transform: translate(-50%, -60%) scale(1.1); }
+            to { transform: translate(-50%, -65%) scale(1.1); }
         }
-        #dialogue-box {
+
+        /* --- CONTROLES / ANALÓGICO (D-PAD) --- */
+        #controls-container {
             width: 100vw;
             height: 30vh;
             background-color: black;
-            border: 4px solid white;
-            padding: 15px;
-            font-size: 16px;
-            line-height: 1.4;
+            border-top: 4px solid white;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: space-around;
+            padding: 10px;
             box-sizing: border-box;
         }
-        #text-box {
-            height: 70%;
-            overflow-y: auto;
+        #dpad {
+            position: relative;
+            width: 120px;
+            height: 120px;
         }
-        .btn {
-            background: white;
-            color: black;
-            border: 2px solid white;
-            padding: 10px 20px;
-            font-weight: bold;
-            font-family: 'Courier New', Courier, monospace;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: inset 0 0 0 2px black;
-        }
-        .btn:active {
-            background: black;
-            color: white;
-        }
-        .screen {
+        .dpad-btn {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 10;
+            background: #222;
+            border: 3px solid white;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            text-align: center;
-            display: none;
+            border-radius: 8px;
+        }
+        .dpad-btn:active {
+            background: white;
+            color: black;
+        }
+        #btn-up    { top: 0; left: 40px; width: 40px; height: 40px; }
+        #btn-down  { bottom: 0; left: 40px; width: 40px; height: 40px; }
+        #btn-left  { top: 40px; left: 0; width: 40px; height: 40px; }
+        #btn-right { top: 40px; right: 0; width: 40px; height: 40px; }
+
+        #text-box {
+            width: 50%;
+            height: 100px;
+            border: 2px solid white;
+            padding: 8px;
+            font-size: 13px;
+            overflow-y: auto;
+            background: #111;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center; display: none;
+        }
+        .btn {
+            background: white; color: black; border: 2px solid white; padding: 10px 20px;
+            font-weight: bold; font-family: inherit; cursor: pointer; text-transform: uppercase;
         }
     </style>
 </head>
@@ -149,14 +181,19 @@
         <div class="furniture" id="bed"></div>
         <div id="rug"></div>
         
-        <div id="player" class="sprite"></div>
+        <div id="player" class="sprite">
+            <div class="character-hair-front"></div>
+            <div class="character-face"></div>
+            <div class="character-body"></div>
+        </div>
+        
         <div id="cat" class="sprite">🐈⚡</div>
         <div id="toy" class="sprite">☁️</div>
         
-        <!-- Tela de Vitória com a frase personalizada -->
+        <!-- Tela de Vitória -->
         <div id="win-screen" class="screen">
-            <h2 style="color: #ff3366; margin-bottom: 20px; font-size: 26px; font-weight: bold;">VOCÊ CONSEGUIU! 🎉</h2>
-            <p id="win-message" style="font-size: 22px; margin-bottom: 30px; color: #fff; line-height: 1.6;">
+            <h2 style="color: #ff3366; margin-bottom: 20px; font-size: 24px;">VOCÊ CONSEGUIU! 🎉</h2>
+            <p style="font-size: 20px; margin-bottom: 30px; color: #fff; line-height: 1.6;">
                 Te amo linda de cabelo vermelho ❤️
             </p>
             <button class="btn" onclick="resetGame()">Jogar de Novo</button>
@@ -165,13 +202,20 @@
         <!-- Tela de Game Over -->
         <div id="lose-screen" class="screen">
             <h2 style="color: #ff3333; margin-bottom: 20px; font-size: 24px;">GAME OVER 🐾</h2>
-            <p style="font-size: 16px; margin-bottom: 20px;">O gatinho laranja te pegou antes que você chegasse no Cinnamoroll!</p>
+            <p style="margin-bottom: 20px;">O gatinho laranja te pegou!</p>
             <button class="btn" onclick="resetGame()">Tentar de Novo</button>
         </div>
     </div>
 
-    <div id="dialogue-box">
-        <div id="text-box">* Você entrou no quarto...<br>* Fuja do GATO LARANJA e pegue a pelúcia do CINNAMOROLL!<br>* (Toque na tela para se mover)</div>
+    <!-- Seção de baixo com Analógico e Diálogo estilo RPG -->
+    <div id="controls-container">
+        <div id="dpad">
+            <div class="dpad-btn" id="btn-up">▲</div>
+            <div class="dpad-btn" id="btn-down">▼</div>
+            <div class="dpad-btn" id="btn-left">◀</div>
+            <div class="dpad-btn" id="btn-right">▶</div>
+        </div>
+        <div id="text-box">* Use o analógico ao lado para andar.<br>* Fuja do gato e pegue o Cinnamoroll!</div>
     </div>
 
     <script>
@@ -185,16 +229,18 @@
 
         let pX, pY, cX, cY, tX, tY;
         let gameActive = true;
-        let speed = 2.8;
+        let catSpeed = 1.9; // Velocidade equilibrada para o analógico
+        let playerSpeed = 4.5; // Velocidade de movimento da personagem
+
+        // Estados dos botões do analógico
+        let moveKeys = { up: false, down: false, left: false, right: false };
 
         function initPositions() {
             const w = container.clientWidth;
             const h = container.clientHeight;
-
-            pX = w * 0.2; pY = h * 0.7; 
+            pX = w * 0.2; pY = h * 0.5; 
             cX = w * 0.8; cY = h * 0.8; 
-            tX = w * 0.75; tY = h * 0.25;
-
+            tX = w * 0.8; tY = h * 0.2;
             updatePositions();
         }
 
@@ -207,43 +253,55 @@
             toy.style.top = tY + 'px';
         }
 
-        container.addEventListener('touchstart', handleTouch);
-        container.addEventListener('touchmove', handleTouch);
+        // Vincular botões do analógico (Funciona em Toque e Mouse)
+        const setupBtn = (id, direction) => {
+            const btn = document.getElementById(id);
+            const start = (e) => { e.preventDefault(); moveKeys[direction] = true; };
+            const end = (e) => { e.preventDefault(); moveKeys[direction] = false; };
+            
+            btn.addEventListener('touchstart', start);
+            btn.addEventListener('touchend', end);
+            btn.addEventListener('mousedown', start);
+            btn.addEventListener('mouseup', end);
+            btn.addEventListener('mouseleave', end);
+        };
 
-        function handleTouch(e) {
-            if (!gameActive) return;
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = container.getBoundingClientRect();
-            
-            pX = touch.clientX - rect.left;
-            pY = touch.clientY - rect.top;
-            
-            pX = Math.max(20, Math.min(container.clientWidth - 20, pX));
-            pY = Math.max(25, Math.min(container.clientHeight - 25, pY));
-            
-            player.style.left = pX + 'px';
-            player.style.top = pY + 'px';
-        }
+        setupBtn('btn-up', 'up');
+        setupBtn('btn-down', 'down');
+        setupBtn('btn-left', 'left');
+        setupBtn('btn-right', 'right');
 
+        // Loop principal
         function gameLoop() {
             if (!gameActive) return;
 
+            // Movimentação do Jogador baseada no analógico ativo
+            if (moveKeys.up) pY -= playerSpeed;
+            if (moveKeys.down) pY += playerSpeed;
+            if (moveKeys.left) pX -= playerSpeed;
+            if (moveKeys.right) pX += playerSpeed;
+
+            // Limites das paredes do quarto
+            pX = Math.max(20, Math.min(container.clientWidth - 20, pX));
+            pY = Math.max(25, Math.min(container.clientHeight - 25, pY));
+
+            // IA do Gato seguindo a jogadora
             let dx = pX - cX;
             let dy = pY - cY;
             let distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
 
             if (distanceToPlayer > 5) {
-                cX += (dx / distanceToPlayer) * speed;
-                cY += (dy / distanceToPlayer) * speed;
-                cat.style.left = cX + 'px';
-                cat.style.top = cY + 'px';
+                cX += (dx / distanceToPlayer) * catSpeed;
+                cY += (dy / distanceToPlayer) * catSpeed;
             }
 
+            updatePositions();
+
+            // Colisões
             if (distanceToPlayer < 28) {
                 gameActive = false;
                 loseScreen.style.display = 'flex';
-                textBox.innerHTML = "* O gatinho laranja te pegou...<br>* Sua DETERMINAÇÃO vacilou.";
+                textBox.innerHTML = "* O gatinho te alcançou...";
             }
 
             let txDiff = pX - tX;
@@ -253,7 +311,7 @@
             if (distanceToToy < 32) {
                 gameActive = false;
                 winScreen.style.display = 'flex';
-                textBox.innerHTML = "* Você conseguiu pegar o Cinnamoroll!<br>* O quarto se enche de paz.";
+                textBox.innerHTML = "* Você pegou o Cinnamoroll! ❤️";
             }
 
             requestAnimationFrame(gameLoop);
@@ -262,8 +320,9 @@
         function resetGame() {
             winScreen.style.display = 'none';
             loseScreen.style.display = 'none';
-            textBox.innerHTML = "* O jogo recomeçou.<br>* Fuja do gatinho e pegue a pelúcia!";
+            textBox.innerHTML = "* Fuja do gatinho e pegue a pelúcia!";
             gameActive = true;
+            moveKeys = { up: false, down: false, left: false, right: false };
             initPositions();
             requestAnimationFrame(gameLoop);
         }
