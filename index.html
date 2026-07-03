@@ -26,7 +26,7 @@
         #game-container {
             position: relative;
             width: 100vw;
-            height: 50vh; 
+            height: 60vh; 
             background-color: #2e2242; 
             border-bottom: 4px solid #fff;
             overflow: hidden;
@@ -58,7 +58,7 @@
             z-index: 2;
         }
 
-        /* --- MENINA DE CABELO VERMELHO E OLHO VERDE --- */
+        /* --- BONECA DE CABELO VERMELHO E OLHO VERDE --- */
         #player {
             width: 35px;
             height: 55px;
@@ -103,7 +103,7 @@
             background-color: #1a1a1a; border-radius: 2px; box-shadow: 4px 0 0 #1a1a1a, 11px 0 0 #1a1a1a;
         }
 
-        /* SAPO INIMIGO */
+        /* INIMIGO: SAPO */
         #frog { 
             font-size: 32px; 
             line-height: 1; 
@@ -114,28 +114,29 @@
             to { transform: translate(-50%, -70%) scaleY(0.9); }
         }
 
-        /* CHUVEIRO */
+        /* OBJETIVO: CHUVEIRO */
         #shower {
             font-size: 36px; line-height: 1;
             filter: drop-shadow(0 0 10px #00d2ff);
         }
 
-        /* --- CONTROLES / ANALÓGICO (D-PAD) --- */
+        /* --- CONTROLES / ANALÓGICO EM BAIXO --- */
         #controls-container {
             width: 100vw;
-            height: 30vh;
+            height: 40vh;
             background-color: black;
             border-top: 4px solid white;
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 10px;
+            padding: 15px;
             box-sizing: border-box;
         }
         #dpad {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
+            flex-shrink: 0;
         }
         .dpad-btn {
             position: absolute;
@@ -143,29 +144,31 @@
             border: 3px solid white;
             color: white;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: 10px;
+            cursor: pointer;
         }
         .dpad-btn:active {
             background: white;
             color: black;
         }
-        #btn-up    { top: 0; left: 40px; width: 40px; height: 40px; }
-        #btn-down  { bottom: 0; left: 40px; width: 40px; height: 40px; }
-        #btn-left  { top: 40px; left: 0; width: 40px; height: 40px; }
-        #btn-right { top: 40px; right: 0; width: 40px; height: 40px; }
+        #btn-up    { top: 0; left: 45px; width: 40px; height: 40px; }
+        #btn-down  { bottom: 0; left: 45px; width: 40px; height: 40px; }
+        #btn-left  { top: 45px; left: 0; width: 40px; height: 40px; }
+        #btn-right { top: 45px; right: 0; width: 40px; height: 40px; }
 
         #text-box {
-            width: 50%;
-            height: 100px;
+            width: 60%;
+            height: 110px;
             border: 2px solid white;
-            padding: 8px;
-            font-size: 13px;
+            padding: 10px;
+            font-size: 14px;
             overflow-y: auto;
             background: #111;
+            line-height: 1.4;
         }
 
         .screen {
@@ -178,6 +181,7 @@
         .btn {
             background: white; color: black; border: 2px solid white; padding: 10px 20px;
             font-weight: bold; font-family: inherit; cursor: pointer; text-transform: uppercase;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -194,14 +198,90 @@
         </div>
         
         <div id="frog" class="sprite">🐸</div>
-        <div id="shower" class="sprite">🚿🚿</div>
+        <div id="shower" class="sprite">🏽🚿</div>
         
+        <!-- Telas de Fim de Jogo -->
         <div id="win-screen" class="screen">
-            <h2 style="color: #00ff66; margin-bottom: 20px; font-size: 24px; font-weight: bold;">VITÓRIA! 🚿</h2>
-            <p style="font-size: 22px; margin-bottom: 30px; color: #fff; line-height: 1.6; font-weight: bold;">
+            <h2 style="color: #00ff66; margin-bottom: 15px; font-size: 24px;">VITÓRIA! 🚿</h2>
+            <p style="font-size: 20px; color: #fff; font-weight: bold;">
                 muito bem menina, matt vai apanha
             </p>
             <button class="btn" onclick="resetGame()">Jogar de Novo</button>
         </div>
 
-        <div id="lose
+        <div id="lose-screen" class="screen">
+            <h2 style="color: #ff3333; margin-bottom: 15px; font-size: 24px;">MICO! 🐸</h2>
+            <p style="font-size: 20px; color: #ff3333; font-weight: bold;">
+                Meninaaa vai apanha do xapo
+            </p>
+            <button class="btn" onclick="resetGame()">Tentar de Novo</button>
+        </div>
+    </div>
+
+    <!-- Painel de Controles Inferior -->
+    <div id="controls-container">
+        <div id="dpad">
+            <div class="dpad-btn" id="btn-up">▲</div>
+            <div class="dpad-btn" id="btn-down">▼</div>
+            <div class="dpad-btn" id="btn-left">◀</div>
+            <div class="dpad-btn" id="btn-right">▶</div>
+        </div>
+        <div id="text-box">* Fuja do sapo e vá tomar banho no chuveiro!<br>* Use as setas do analógico para mover a personagem.</div>
+    </div>
+
+    <script>
+        const container = document.getElementById('game-container');
+        const player = document.getElementById('player');
+        const frog = document.getElementById('frog');
+        const shower = document.getElementById('shower');
+        const textBox = document.getElementById('text-box');
+        const winScreen = document.getElementById('win-screen');
+        const loseScreen = document.getElementById('lose-screen');
+
+        let pX, pY, fX, fY, sX, sY;
+        let gameActive = true;
+        const frogSpeed = 1.8; 
+        const playerSpeed = 4.5; 
+
+        let moveKeys = { up: false, down: false, left: false, right: false };
+
+        function initPositions() {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            pX = w * 0.2; pY = h * 0.5; 
+            fX = w * 0.8; fY = h * 0.8; 
+            sX = w * 0.8; sY = h * 0.2;
+            updatePositions();
+        }
+
+        function updatePositions() {
+            player.style.left = pX + 'px';
+            player.style.top = pY + 'px';
+            frog.style.left = fX + 'px';
+            frog.style.top = fY + 'px';
+            shower.style.left = sX + 'px';
+            shower.style.top = sY + 'px';
+        }
+
+        const setupBtn = (id, direction) => {
+            const btn = document.getElementById(id);
+            
+            const start = (e) => { 
+                e.preventDefault(); 
+                moveKeys[direction] = true; 
+            };
+            const end = (e) => { 
+                e.preventDefault(); 
+                moveKeys[direction] = false; 
+            };
+            
+            btn.addEventListener('touchstart', start, { passive: false });
+            btn.addEventListener('touchend', end, { passive: false });
+            btn.addEventListener('mousedown', start);
+            btn.addEventListener('mouseup', end);
+            btn.addEventListener('mouseleave', end);
+        };
+
+        setupBtn('btn-up', 'up');
+        setupBtn('btn-down', 'down');
+        setupBtn('btn-left', 'leftNormally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
