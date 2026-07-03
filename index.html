@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resgate o Cinnamoroll! ✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body {
+            background-color: #140d21;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+        }
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 70vh;
+            background-color: #2e2242; /* Quarto estilo Undertale */
+            border-bottom: 4px solid #fff;
+            overflow: hidden;
+        }
+        .furniture {
+            position: absolute;
+            background: #413159;
+            border: 2px solid #5a457a;
+            border-radius: 4px;
+        }
+        #bed { width: 60px; height: 90px; top: 10px; left: 10px; }
+        #bed::after { content: '🛏️'; font-size: 24px; position: absolute; top: 10px; left: 15px; }
+        #rug {
+            position: absolute;
+            width: 140px;
+            height: 100px;
+            background-color: #5c3e2b;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px dashed #7c583f;
+            opacity: 0.6;
+            z-index: 1;
+        }
+        .sprite {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            transition: left 0.1s linear, top 0.1s linear;
+        }
+        /* Personagem: Cabelo Vermelho e Olhos Verdes */
+        #player {
+            width: 32px;
+            height: 45px;
+            background-color: #e63946; /* Cabelo Vermelho */
+            border-radius: 6px;
+            border: 3px solid #2a9d8f;
+            box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+        }
+        #player::before {
+            content: '';
+            position: absolute;
+            top: 8px; left: 4px; width: 6px; height: 6px;
+            background: #00ff66; border-radius: 50%; /* Olho verde */
+        }
+        #player::after {
+            content: '';
+            position: absolute;
+            top: 8px; right: 4px; width: 6px; height: 6px;
+            background: #00ff66; border-radius: 50%; /* Olho verde */
+        }
+        #cat {
+            font-size: 28px;
+            line-height: 1;
+        }
+        #toy {
+            font-size: 32px;
+            line-height: 1;
+            filter: drop-shadow(0 0 8px #00d2ff);
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -60%) scale(1.1); }
+        }
+        #dialogue-box {
+            width: 100vw;
+            height: 30vh;
+            background-color: black;
+            border: 4px solid white;
+            padding: 15px;
+            font-size: 16px;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+        #text-box {
+            height: 70%;
+            overflow-y: auto;
+        }
+        .btn {
+            background: white;
+            color: black;
+            border: 2px solid white;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: inset 0 0 0 2px black;
+        }
+        .btn:active {
+            background: black;
+            color: white;
+        }
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div class="furniture" id="bed"></div>
+        <div id="rug"></div>
+        
+        <div id="player" class="sprite"></div>
+        <div id="cat" class="sprite">🐈⚡</div>
+        <div id="toy" class="sprite">☁️</div>
+        
+        <!-- Tela de Vitória com a frase personalizada -->
+        <div id="win-screen" class="screen">
+            <h2 style="color: #ff3366; margin-bottom: 20px; font-size: 26px; font-weight: bold;">VOCÊ CONSEGUIU! 🎉</h2>
+            <p id="win-message" style="font-size: 22px; margin-bottom: 30px; color: #fff; line-height: 1.6;">
+                Te amo linda de cabelo vermelho ❤️
+            </p>
+            <button class="btn" onclick="resetGame()">Jogar de Novo</button>
+        </div>
+
+        <!-- Tela de Game Over -->
+        <div id="lose-screen" class="screen">
+            <h2 style="color: #ff3333; margin-bottom: 20px; font-size: 24px;">GAME OVER 🐾</h2>
+            <p style="font-size: 16px; margin-bottom: 20px;">O gatinho laranja te pegou antes que você chegasse no Cinnamoroll!</p>
+            <button class="btn" onclick="resetGame()">Tentar de Novo</button>
+        </div>
+    </div>
+
+    <div id="dialogue-box">
+        <div id="text-box">* Você entrou no quarto...<br>* Fuja do GATO LARANJA e pegue a pelúcia do CINNAMOROLL!<br>* (Toque na tela para se mover)</div>
+    </div>
+
+    <script>
+        const container = document.getElementById('game-container');
+        const player = document.getElementById('player');
+        const cat = document.getElementById('cat');
+        const toy = document.getElementById('toy');
+        const textBox = document.getElementById('text-box');
+        const winScreen = document.getElementById('win-screen');
+        const loseScreen = document.getElementById('lose-screen');
+
+        let pX, pY, cX, cY, tX, tY;
+        let gameActive = true;
+        let speed = 2.8;
+
+        function initPositions() {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+
+            pX = w * 0.2; pY = h * 0.7; 
+            cX = w * 0.8; cY = h * 0.8; 
+            tX = w * 0.75; tY = h * 0.25;
+
+            updatePositions();
+        }
+
+        function updatePositions() {
+            player.style.left = pX + 'px';
+            player.style.top = pY + 'px';
+            cat.style.left = cX + 'px';
+            cat.style.top = cY + 'px';
+            toy.style.left = tX + 'px';
+            toy.style.top = tY + 'px';
+        }
+
+        container.addEventListener('touchstart', handleTouch);
+        container.addEventListener('touchmove', handleTouch);
+
+        function handleTouch(e) {
+            if (!gameActive) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = container.getBoundingClientRect();
+            
+            pX = touch.clientX - rect.left;
+            pY = touch.clientY - rect.top;
+            
+            pX = Math.max(20, Math.min(container.clientWidth - 20, pX));
+            pY = Math.max(25, Math.min(container.clientHeight - 25, pY));
+            
+            player.style.left = pX + 'px';
+            player.style.top = pY + 'px';
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            let dx = pX - cX;
+            let dy = pY - cY;
+            let distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+
+            if (distanceToPlayer > 5) {
+                cX += (dx / distanceToPlayer) * speed;
+                cY += (dy / distanceToPlayer) * speed;
+                cat.style.left = cX + 'px';
+                cat.style.top = cY + 'px';
+            }
+
+            if (distanceToPlayer < 28) {
+                gameActive = false;
+                loseScreen.style.display = 'flex';
+                textBox.innerHTML = "* O gatinho laranja te pegou...<br>* Sua DETERMINAÇÃO vacilou.";
+            }
+
+            let txDiff = pX - tX;
+            let tyDiff = pY - tY;
+            let distanceToToy = Math.sqrt(txDiff * txDiff + tyDiff * tyDiff);
+
+            if (distanceToToy < 32) {
+                gameActive = false;
+                winScreen.style.display = 'flex';
+                textBox.innerHTML = "* Você conseguiu pegar o Cinnamoroll!<br>* O quarto se enche de paz.";
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resetGame() {
+            winScreen.style.display = 'none';
+            loseScreen.style.display = 'none';
+            textBox.innerHTML = "* O jogo recomeçou.<br>* Fuja do gatinho e pegue a pelúcia!";
+            gameActive = true;
+            initPositions();
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.onload = () => {
+            initPositions();
+            requestAnimationFrame(gameLoop);
+        };
+    </script>
+</body>
+</html>
