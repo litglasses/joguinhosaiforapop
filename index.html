@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Resgate o Cinnamoroll! ✨</title>
+    <title>Hora do Banho! 🚿</title>
     <style>
         * {
             box-sizing: border-box;
@@ -26,7 +26,7 @@
         #game-container {
             position: relative;
             width: 100vw;
-            height: 50vh; /* Ajustado para dar espaço ao analógico */
+            height: 50vh; 
             background-color: #2e2242; 
             border-bottom: 4px solid #fff;
             overflow: hidden;
@@ -103,15 +103,21 @@
             background-color: #1a1a1a; border-radius: 2px; box-shadow: 4px 0 0 #1a1a1a, 11px 0 0 #1a1a1a;
         }
 
-        #cat { font-size: 32px; line-height: 1; }
-        #toy {
+        /* SAPO INIMIGO */
+        #frog { 
+            font-size: 32px; 
+            line-height: 1; 
+            animation: hop 0.5s infinite alternate;
+        }
+        @keyframes hop {
+            from { transform: translate(-50%, -50%) scaleY(1); }
+            to { transform: translate(-50%, -70%) scaleY(0.9); }
+        }
+
+        /* CHUVEIRO */
+        #shower {
             font-size: 36px; line-height: 1;
             filter: drop-shadow(0 0 10px #00d2ff);
-            animation: bounce 0.8s infinite alternate;
-        }
-        @keyframes bounce {
-            from { transform: translate(-50%, -50%) scale(1); }
-            to { transform: translate(-50%, -65%) scale(1.1); }
         }
 
         /* --- CONTROLES / ANALÓGICO (D-PAD) --- */
@@ -187,150 +193,15 @@
             <div class="character-body"></div>
         </div>
         
-        <div id="cat" class="sprite">🐈⚡</div>
-        <div id="toy" class="sprite">☁️</div>
+        <div id="frog" class="sprite">🐸</div>
+        <div id="shower" class="sprite">🚿🚿</div>
         
-        <!-- Tela de Vitória -->
         <div id="win-screen" class="screen">
-            <h2 style="color: #ff3366; margin-bottom: 20px; font-size: 24px;">VOCÊ CONSEGUIU! 🎉</h2>
-            <p style="font-size: 20px; margin-bottom: 30px; color: #fff; line-height: 1.6;">
-                Te amo linda de cabelo vermelho ❤️
+            <h2 style="color: #00ff66; margin-bottom: 20px; font-size: 24px; font-weight: bold;">VITÓRIA! 🚿</h2>
+            <p style="font-size: 22px; margin-bottom: 30px; color: #fff; line-height: 1.6; font-weight: bold;">
+                muito bem menina, matt vai apanha
             </p>
             <button class="btn" onclick="resetGame()">Jogar de Novo</button>
         </div>
 
-        <!-- Tela de Game Over -->
-        <div id="lose-screen" class="screen">
-            <h2 style="color: #ff3333; margin-bottom: 20px; font-size: 24px;">GAME OVER 🐾</h2>
-            <p style="margin-bottom: 20px;">O gatinho laranja te pegou!</p>
-            <button class="btn" onclick="resetGame()">Tentar de Novo</button>
-        </div>
-    </div>
-
-    <!-- Seção de baixo com Analógico e Diálogo estilo RPG -->
-    <div id="controls-container">
-        <div id="dpad">
-            <div class="dpad-btn" id="btn-up">▲</div>
-            <div class="dpad-btn" id="btn-down">▼</div>
-            <div class="dpad-btn" id="btn-left">◀</div>
-            <div class="dpad-btn" id="btn-right">▶</div>
-        </div>
-        <div id="text-box">* Use o analógico ao lado para andar.<br>* Fuja do gato e pegue o Cinnamoroll!</div>
-    </div>
-
-    <script>
-        const container = document.getElementById('game-container');
-        const player = document.getElementById('player');
-        const cat = document.getElementById('cat');
-        const toy = document.getElementById('toy');
-        const textBox = document.getElementById('text-box');
-        const winScreen = document.getElementById('win-screen');
-        const loseScreen = document.getElementById('lose-screen');
-
-        let pX, pY, cX, cY, tX, tY;
-        let gameActive = true;
-        let catSpeed = 1.9; // Velocidade equilibrada para o analógico
-        let playerSpeed = 4.5; // Velocidade de movimento da personagem
-
-        // Estados dos botões do analógico
-        let moveKeys = { up: false, down: false, left: false, right: false };
-
-        function initPositions() {
-            const w = container.clientWidth;
-            const h = container.clientHeight;
-            pX = w * 0.2; pY = h * 0.5; 
-            cX = w * 0.8; cY = h * 0.8; 
-            tX = w * 0.8; tY = h * 0.2;
-            updatePositions();
-        }
-
-        function updatePositions() {
-            player.style.left = pX + 'px';
-            player.style.top = pY + 'px';
-            cat.style.left = cX + 'px';
-            cat.style.top = cY + 'px';
-            toy.style.left = tX + 'px';
-            toy.style.top = tY + 'px';
-        }
-
-        // Vincular botões do analógico (Funciona em Toque e Mouse)
-        const setupBtn = (id, direction) => {
-            const btn = document.getElementById(id);
-            const start = (e) => { e.preventDefault(); moveKeys[direction] = true; };
-            const end = (e) => { e.preventDefault(); moveKeys[direction] = false; };
-            
-            btn.addEventListener('touchstart', start);
-            btn.addEventListener('touchend', end);
-            btn.addEventListener('mousedown', start);
-            btn.addEventListener('mouseup', end);
-            btn.addEventListener('mouseleave', end);
-        };
-
-        setupBtn('btn-up', 'up');
-        setupBtn('btn-down', 'down');
-        setupBtn('btn-left', 'left');
-        setupBtn('btn-right', 'right');
-
-        // Loop principal
-        function gameLoop() {
-            if (!gameActive) return;
-
-            // Movimentação do Jogador baseada no analógico ativo
-            if (moveKeys.up) pY -= playerSpeed;
-            if (moveKeys.down) pY += playerSpeed;
-            if (moveKeys.left) pX -= playerSpeed;
-            if (moveKeys.right) pX += playerSpeed;
-
-            // Limites das paredes do quarto
-            pX = Math.max(20, Math.min(container.clientWidth - 20, pX));
-            pY = Math.max(25, Math.min(container.clientHeight - 25, pY));
-
-            // IA do Gato seguindo a jogadora
-            let dx = pX - cX;
-            let dy = pY - cY;
-            let distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
-
-            if (distanceToPlayer > 5) {
-                cX += (dx / distanceToPlayer) * catSpeed;
-                cY += (dy / distanceToPlayer) * catSpeed;
-            }
-
-            updatePositions();
-
-            // Colisões
-            if (distanceToPlayer < 28) {
-                gameActive = false;
-                loseScreen.style.display = 'flex';
-                textBox.innerHTML = "* O gatinho te alcançou...";
-            }
-
-            let txDiff = pX - tX;
-            let tyDiff = pY - tY;
-            let distanceToToy = Math.sqrt(txDiff * txDiff + tyDiff * tyDiff);
-
-            if (distanceToToy < 32) {
-                gameActive = false;
-                winScreen.style.display = 'flex';
-                textBox.innerHTML = "* Você pegou o Cinnamoroll! ❤️";
-            }
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        function resetGame() {
-            winScreen.style.display = 'none';
-            loseScreen.style.display = 'none';
-            textBox.innerHTML = "* Fuja do gatinho e pegue a pelúcia!";
-            gameActive = true;
-            moveKeys = { up: false, down: false, left: false, right: false };
-            initPositions();
-            requestAnimationFrame(gameLoop);
-        }
-
-        window.onload = () => {
-            initPositions();
-            requestAnimationFrame(gameLoop);
-        };
-    </script>
-</body>
-</html>
+        <div id="lose
